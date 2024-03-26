@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08f2ab7f92c0917489d788c2f267d245, type: 3}
+  m_Name: PistolBodyPart
+  m_EditorClassIdentifier: 
+  Part: 3
+  Lvl1BodyPartPrefab: {fileID: 2561833913576612932, guid: 22821e9ae2467f942bdf83e6523076d1, type: 3}
+  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: 22821e9ae2467f942bdf83e6523076d1, type: 3}
+  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: 22821e9ae2467f942bdf83e6523076d1, type: 3}
+  Cost: 1
+  Name: Pistol
