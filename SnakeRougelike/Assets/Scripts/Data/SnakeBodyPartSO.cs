@@ -13,4 +13,7 @@ public class SnakeBodyPartSO : ScriptableObject
 
     public int Cost;
     public string Name;
+
+    [TextArea]
+    public string Description;
 }

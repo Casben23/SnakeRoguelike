@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIPurchaseButtonBase : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UIPurchaseButtonBase : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] protected int m_Cost;
     [SerializeField] private bool m_Highlighted = false;
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        TryPurchase();
+    }
+
+    virtual public void OnPointerEnter(PointerEventData eventData)
     {
         if (!m_Highlighted)
         {
@@ -18,7 +23,7 @@ public class UIPurchaseButtonBase : MonoBehaviour, IPointerEnterHandler, IPointe
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    virtual public void OnPointerExit(PointerEventData eventData)
     {
         LeanTween.cancel(gameObject);
         transform.localScale = new Vector3(1, 1, 1);

@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 3621436631721791602}
   - component: {fileID: 2462058223583872685}
   - component: {fileID: 6060847174948909141}
-  - component: {fileID: -5233896654664985033}
   - component: {fileID: 7002020660594009775}
   - component: {fileID: -5472776308289674864}
+  - component: {fileID: -1403319779505486135}
   m_Layer: 9
-  m_Name: PistolBodyPart
+  m_Name: MortarBodyPart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fca05fe446d55434a85b9941ecc9d27b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 413931d059f75ec4589fb9332d3089e9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,33 +102,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &-5233896654664985033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2561833913576612932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a07068da753f7e14ab4d857452ca218c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Part: 3
-  m_Classes: 01000000
-  m_Stats:
-    ActionCooldown: 1
-    Health: 1
-    ProjectileSpeed: 15
-    Damage: 1
-    AreaOfEffect: 0
-    PierceAmount: 3
-  m_FlashDuration: 0.2
-  m_FlashColor: {r: 1, g: 1, b: 1, a: 1}
-  m_EnemyLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  m_Projectile: {fileID: 321280305533627731, guid: 458347290e2b6614a8b269159c1d8b5b, type: 3}
 --- !u!95 &7002020660594009775
 Animator:
   serializedVersion: 3
@@ -169,3 +142,33 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-1403319779505486135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561833913576612932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0d16186ba8b7545a9b0c11f91af778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Part: 0
+  m_Classes: 00000000
+  m_Stats:
+    ActionCooldown: 5
+    Health: 1
+    ProjectileSpeed: 0
+    Damage: 2
+    AreaOfEffect: 3
+    PierceAmount: 0
+    Range: 600
+    ProjectileAmount: 1
+    Spread: 0
+  m_EnemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  m_FlashDuration: 0.2
+  m_FlashColor: {r: 1, g: 1, b: 1, a: 1}
+  m_Projectile: {fileID: 321280305533627731, guid: 8d9a86e0e4f896c498dc147ad958e796, type: 3}

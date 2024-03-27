@@ -27,14 +27,15 @@ public enum EBodyPart
     Pistol = 3,
     SMG = 4,
     Sniper = 5,
+    Shotgun = 10, // <--- HIGHEST
 
     //Supports
     ArtilleryLoader = 6,
     BoxOfTNT = 7,
     BoxOfGuns = 8,
-    DoubleBarrels = 9, // <--- HIGHEST
+    DoubleBarrels = 9, 
 
-    COUNT
+    COUNT = 11
 }
 
 public class SnakeBodyController : MonoBehaviour
@@ -44,6 +45,8 @@ public class SnakeBodyController : MonoBehaviour
 
     private List<GameObject> m_ActiveBodyParts = new List<GameObject>();
     private Dictionary<EBodyPart, int> m_BodyPartCollection = new Dictionary<EBodyPart, int>();
+
+    private bool m_IsDead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -176,10 +179,28 @@ public class SnakeBodyController : MonoBehaviour
                     m_BodyPartCollection[bodyPartBase.GetPart()] = 0;
 
                     Destroy(part);
+
+                    GameStatisticsManager.Instance.GetGameStats().PartsLostThisLevel += 1;
+
+                    if(m_ActiveBodyParts.Count <= 1)
+                    {
+                        Die();
+                    }
+
                     break;
                 }
             }
         }
+    }
+
+    private void Die()
+    {
+        m_IsDead = true;
+    }
+
+    public bool IsDead()
+    {
+        return m_IsDead;
     }
 
     void RemoveRandomPart()

@@ -5,21 +5,17 @@ using UnityEngine;
 
 public class MortarBodyPart : SnakeBodyPartBase
 {
-    [SerializeField] LayerMask m_EnemyLayerMask;
     [SerializeField] GameObject m_Projectile;
 
     protected override void PerformAction()
     {
         base.PerformAction();
 
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, 10000, m_EnemyLayerMask).ToList();
-
-        if (colliders.Count <= 0)
+        Collider2D randomEnemyInRange = GetRandomEnemyInRange();
+        if (randomEnemyInRange == null)
             return;
 
-        int randomIndex = Random.Range(0, colliders.Count);
-
-        FireProjectile(colliders[randomIndex].gameObject);
+        FireProjectile(randomEnemyInRange.gameObject);
     }
 
     private void FireProjectile(GameObject InTarget)

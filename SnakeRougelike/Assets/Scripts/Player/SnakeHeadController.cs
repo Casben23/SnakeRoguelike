@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SnakeHeadController : MonoBehaviour
 {
@@ -10,12 +11,13 @@ public class SnakeHeadController : MonoBehaviour
     [SerializeField] private float m_RotationSpeed = 10f;
     [SerializeField] private LayerMask m_BodyLayerMask;
     [SerializeField] private float m_TimeUntilCanEat = 2;
-
+    [SerializeField] private GameObject m_DeathEffect;
     private Vector2 m_CurrentMousePosition;
     private SnakeBodyController m_BodyController;
     private bool m_HasEaten = false;
 
     private float m_CurrentTimeUntilCanEat = 0;
+    private bool m_IsDead = false;
 
     void Start()
     {
@@ -25,6 +27,18 @@ public class SnakeHeadController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_BodyController.IsDead())
+        {
+            if (!m_IsDead)
+            {
+                StartCoroutine(DeathSecuence());
+                m_IsDead = true;
+            }
+
+            UpdateMovement();
+            return;
+        }
+
         UpdateMousePosition();
         UpdateRotation();
         UpdateMovement();
@@ -91,5 +105,38 @@ public class SnakeHeadController : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+    }
+
+    IEnumerator DeathSecuence()
+    {
+        GameManager.Instance.MuffleSound();
+        SoundManager.Instance.PlayGeneralSound(SFXType.OnPlayerDie, false);
+        Time.timeScale = 0.3f;
+
+        float currentMoveSpeed = m_MoveSpeed;
+
+        LeanTween.value(gameObject, currentMoveSpeed, 0, 2f).setEaseOutCubic().setIgnoreTimeScale(true).setOnUpdate(UpdateSpeed);
+
+        yield return CoroutineUtil.WaitForRealSeconds(1f);
+
+        m_IsDead = true;
+        Time.timeScale = 1;
+
+        yield return CoroutineUtil.WaitForRealSeconds(1f);
+
+        Instantiate(m_DeathEffect, transform.position, Quaternion.identity);
+        LeanTween.scale(gameObject, new Vector3(0, 0, 1), 2f).setEaseInCubic();
+        LeanTween.rotateAround(gameObject, new Vector3(0, 0, 1), 1000, 2f).setEaseInCubic();
+        SoundManager.Instance.PlayGeneralSound(SFXType.OnPlayerDieEffect, false);
+
+        yield return CoroutineUtil.WaitForRealSeconds(3f);
+
+        GameManager.Instance.GameOver();
+        Destroy(gameObject);
+    }
+
+    private void UpdateSpeed(float InValue)
+    {
+        m_MoveSpeed = InValue;
     }
 }

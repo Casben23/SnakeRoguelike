@@ -59,7 +59,6 @@ public class WaveController : MonoBehaviour
         m_EnemySpawns.Sort((x, y) => x.Cost.CompareTo(y.Cost));
 
         m_SpawnManager = gameObject.GetComponent<WaveSpawnManager>();
-        StartNewWave();
     }
 
     public void OnLevelStart()
@@ -131,7 +130,7 @@ public class WaveController : MonoBehaviour
         {
             if(m_CurrentWave >= m_WaveAmount)
             {
-                if (!GameManager.Instance.IsUpgradeScreenOpen())
+                if (!GameManager.Instance.IsWaitingForNewLevel())
                 {
                     GameManager.Instance.OnLevelComplete();
                 }

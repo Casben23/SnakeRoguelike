@@ -28,16 +28,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UINextLevelScreen m_NextLevelScreen;
     [SerializeField] private GameObject m_BackgroundMusicObject;
     [SerializeField] private GameObject m_MoneyText;
+    [SerializeField] private UITransitionController m_TransitionController;
+    [SerializeField] private UIDeathScreen m_DeathScreen;
+    [SerializeField] private GameObject m_DamageText;
 
     private GameObject m_Player;
     private int m_CurrentMoney = 0;
-    private int m_CurrentLevel = 1;
+    private int m_CurrentLevel = 0;
+
+    private bool m_IsWaitingForNewLevel = false;
 
     private void Start()
     {
         m_Player = GameObject.FindGameObjectWithTag("Player");
         m_CurrentMoney = 0;
         m_MoneyText.GetComponent<TextMeshProUGUI>().text = m_CurrentMoney.ToString() + "$";
+
+        m_TransitionController.StartSequence(CloseUpgradeScreen, false, true);
     }
 
     public GameObject GetPlayer()
@@ -65,6 +72,18 @@ public class GameManager : MonoBehaviour
         return m_CurrentMoney;
     }
 
+    public void SpawnDamageText(Vector2 InPosition, int InDamage)
+    {
+        if (m_DamageText == null)
+            return;
+
+        GameObject newDamageText = Instantiate(m_DamageText, InPosition, Quaternion.identity);
+        if(newDamageText.TryGetComponent<DamageTextController>(out DamageTextController damageTextController))
+        {
+            damageTextController.SetupText(InDamage);
+        }
+    }
+
     public int GetCurrentLevel()
     {
         return m_CurrentLevel;
@@ -72,7 +91,34 @@ public class GameManager : MonoBehaviour
 
     public void OnLevelComplete()
     {
+        if (m_Player == null)
+            return;
+
+        if (m_Player.GetComponent<SnakeBodyController>().IsDead())
+            return;
+
         Time.timeScale = 0;
+        m_TransitionController.StartSequence(ShowUpgradeScreen, true, false);
+        m_IsWaitingForNewLevel = true;
+    }
+
+    public void StartTransition(System.Action InOnCompleteAction, bool InShowStats, bool m_StartOpen)
+    {
+        m_TransitionController.StartSequence(InOnCompleteAction, InShowStats, m_StartOpen);
+    }
+
+    public void GameOver()
+    {
+        m_DeathScreen.ShowDeathScreen();
+    }
+
+    public void MuffleSound()
+    {
+        m_BackgroundMusicObject.GetComponent<AudioLowPassFilter>().enabled = true;
+    }
+
+    private void ShowUpgradeScreen()
+    {
         m_BackgroundMusicObject.GetComponent<AudioLowPassFilter>().enabled = true;
         m_NextLevelScreen.OpenNextLevelScreen();
     }
@@ -84,14 +130,31 @@ public class GameManager : MonoBehaviour
 
     public void StartNextLevel()
     {
+        m_TransitionController.StartSequence(CloseUpgradeScreen, false, false);
+    }
+
+    private void CloseUpgradeScreen()
+    {
         Time.timeScale = 1;
         m_CurrentLevel += 1;
+
+        GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
+        gameStats.EnemiesKilledThisLevel = 0;
+        gameStats.CashGainedThisLevel = 0;
+        gameStats.PartsLostThisLevel = 0;
+        gameStats.LevelReached = m_CurrentLevel;
 
         m_BackgroundMusicObject.GetComponent<AudioLowPassFilter>().enabled = false;
         m_NextLevelScreen.CloseNextLevelScreen();
         WaveController.Instance.OnLevelStart();
 
         m_Player.GetComponent<SnakeHeadController>().SetEatCoolDown(2);
+        m_IsWaitingForNewLevel = false;
+    }
+
+    public bool IsWaitingForNewLevel()
+    {
+        return m_IsWaitingForNewLevel;
     }
 
     public UINextLevelScreen GetUpgradeScreen()

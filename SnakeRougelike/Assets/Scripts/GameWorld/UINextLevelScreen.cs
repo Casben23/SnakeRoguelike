@@ -21,20 +21,16 @@ public class UINextLevelScreen : MonoBehaviour
 
     public void OpenNextLevelScreen()
     {
+        m_Background.SetActive(true);
         gameObject.transform.position = new Vector3(0, 0, gameObject.transform.position.z);
         m_UpgradeScreenOpen = true;
         UpdateSnakeVisualiser();
-        OpenUpgradeScreenSequence();
     }
-
-    void OpenUpgradeScreenSequence()
-    {
-        LeanTween.scale(m_Background, new Vector3(100, 100, 1), 1.5f).setIgnoreTimeScale(true);
-    }
-
+    
     public void CloseNextLevelScreen()
     {
-        LeanTween.scale(m_Background, new Vector3(0, 0, 1), 1.5f).setOnComplete(() => { gameObject.transform.position = new Vector3(100000, 0, gameObject.transform.position.z); }).setIgnoreTimeScale(true);
+        m_Background.SetActive(false);
+        gameObject.transform.position = new Vector3(10000, 10000, gameObject.transform.position.z);
         m_UpgradeScreenOpen = false;
     }
 
@@ -42,11 +38,5 @@ public class UINextLevelScreen : MonoBehaviour
     void Start()
     {
         CloseNextLevelScreen();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

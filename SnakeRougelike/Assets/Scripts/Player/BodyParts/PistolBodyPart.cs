@@ -5,47 +5,38 @@ using UnityEngine;
 
 public class PistolBodyPart : SnakeBodyPartBase
 {
-    [SerializeField] LayerMask m_EnemyLayerMask;
     [SerializeField] GameObject m_Projectile;
 
     protected override void PerformAction()
     {
         base.PerformAction();
 
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, 10000, m_EnemyLayerMask).ToList();
-
-        if (colliders.Count <= 0)
+        Collider2D closestEnemy = GetClosestEnemyInRange();
+        if (closestEnemy == null)
             return;
 
-        colliders.Sort((a, b) =>
-        {
-            float distanceToA = Vector2.Distance(transform.position, a.transform.position);
-            float distanceToB = Vector2.Distance(transform.position, b.transform.position);
-            return distanceToA.CompareTo(distanceToB);
-        });
-
-        FireProjectile(colliders[0].gameObject);
+        FireProjectile(closestEnemy.gameObject);
     }
 
     private void FireProjectile(GameObject InTarget)
     {
-        if(m_Projectile == null)
+        if (m_Projectile == null)
         {
-            Debug.LogWarning("No projectile set in [CanonBodyPart] !");
+            Debug.LogWarning("No projectile set in " + this.GetType().ToString() + "!");
             return;
         }
 
-        GameObject newProjectile = SpawnProjectile(m_Projectile, transform.position, Quaternion.identity);
-
-        if (newProjectile.TryGetComponent<ProjectileBase>(out ProjectileBase projectile))
+        for (int i = 0; i < m_Stats.ProjectileAmount; i++)
         {
-            Vector2 fireDirection = (InTarget.transform.position - transform.position).normalized;
+            GameObject newProjectile = SpawnProjectile(m_Projectile, transform.position, Quaternion.identity);
 
-            projectile.SetFireDirection(fireDirection);
+            if (newProjectile.TryGetComponent<ProjectileBase>(out ProjectileBase projectile))
+            {
+                Vector2 fireDirection = (InTarget.transform.position - transform.position).normalized;
+
+                projectile.SetFireDirection(fireDirection);
+            }
         }
-
         SoundManager.Instance.PlayGeneralSound(SFXType.ProjectilFire, true);
-
-        Destroy(newProjectile, 10);
     }
 }

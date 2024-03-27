@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class WeaponPartStats : ICloneable
@@ -15,6 +17,11 @@ public class WeaponPartStats : ICloneable
     public int Damage = 1;
     public int AreaOfEffect = 3;
     public int PierceAmount = 0;
+    public float Range = 5;
+    public int ProjectileAmount = 1;
+
+    [Range(0, 1)]
+    public float Spread = 0;
 
     public object Clone()
     {
@@ -28,9 +35,10 @@ public class SnakeBodyPartBase : MonoBehaviour
     [SerializeField] private EBodyPart m_Part;
     [SerializeField] private List<EBodyPartClass> m_Classes;
 
-    [SerializeField] WeaponPartStats m_Stats;
+    [SerializeField] protected WeaponPartStats m_Stats;
 
     [Header("Misc")]
+    [SerializeField] private LayerMask m_EnemyLayerMask;
     [SerializeField] private float m_FlashDuration = 0.2f;
     [SerializeField] private Color m_FlashColor = Color.white;
 
@@ -55,6 +63,11 @@ public class SnakeBodyPartBase : MonoBehaviour
         return m_Part;
     }
 
+    public List<EBodyPartClass> GetClasses()
+    {
+        return m_Classes;
+    }
+
     public void SetController(SnakeBodyController InController)
     {
         m_BodyController = InController;
@@ -67,6 +80,57 @@ public class SnakeBodyPartBase : MonoBehaviour
         {
             m_BodyController?.RemoveBodyPart(gameObject);
         }
+    }
+
+    protected List<Collider2D> GetEnemiesInRange()
+    {
+        return Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+    }
+
+    protected Collider2D GetClosestEnemyInRange()
+    {
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+
+        if (colliders.Count <= 0)
+            return null;
+
+        colliders.Sort((a, b) =>
+        {
+            float distanceToA = Vector2.Distance(transform.position, a.transform.position);
+            float distanceToB = Vector2.Distance(transform.position, b.transform.position);
+            return distanceToA.CompareTo(distanceToB);
+        });
+
+        return colliders[0];
+    }
+
+    protected Collider2D GetFurthestEnemyInRange()
+    {
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+
+        if (colliders.Count <= 0)
+            return null;
+
+        colliders.Sort((a, b) =>
+        {
+            float distanceToA = Vector2.Distance(transform.position, a.transform.position);
+            float distanceToB = Vector2.Distance(transform.position, b.transform.position);
+            return distanceToA.CompareTo(distanceToB);
+        });
+
+        return colliders[colliders.Count - 1];
+    }
+
+    protected Collider2D GetRandomEnemyInRange()
+    {
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+
+        if (colliders.Count <= 0)
+            return null;
+
+        int randomIndex = Random.Range(0, colliders.Count);
+
+        return colliders[randomIndex];
     }
 
     protected virtual void PerformAction()

@@ -21,7 +21,14 @@ public enum SFXType
     MortarFly,
 
     PartLevelUp3,
-    PartLevelUp2
+    PartLevelUp2,
+
+    ShowStatText,
+    EnemyDie,
+    CritHit,
+
+    OnPlayerDie,
+    OnPlayerDieEffect
 }
 
 [Serializable]

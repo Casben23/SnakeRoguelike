@@ -133,7 +133,13 @@ public class EnemyBase : MonoBehaviour
 
         m_IsDead = true;
 
+        GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
+        gameStats.CashGainedThisLevel += m_MoneyDrop;
+        gameStats.EnemiesKilled += 1;
+        gameStats.EnemiesKilledThisLevel += 1;
+
         GameManager.Instance.AddMoney(m_MoneyDrop);
+        SoundManager.Instance.PlayGeneralSound(SFXType.EnemyDie, true);
 
         Instantiate(m_DeathEffect, transform.position, Quaternion.identity);
 
@@ -149,6 +155,11 @@ public class EnemyBase : MonoBehaviour
     {
         m_Health -= InDamage;
 
+        GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
+        gameStats.DamageDealt += InDamage;
+
+        SoundManager.Instance.PlayGeneralSound(SFXType.EnemyHit, true);
+        GameManager.Instance.SpawnDamageText(transform.position + transform.up * 2, InDamage);
         if (m_Health <= 0)
         {
             Die();
