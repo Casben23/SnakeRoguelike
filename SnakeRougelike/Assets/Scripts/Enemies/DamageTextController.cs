@@ -9,7 +9,7 @@ public class DamageTextController : MonoBehaviour
 
     private TextMeshPro m_Text;
 
-    [SerializeField] float m_TimeAlive = 0.8f;
+    [SerializeField] float m_TimeAlive = 0.5f;
 
     bool m_ShouldRemove = false;
 

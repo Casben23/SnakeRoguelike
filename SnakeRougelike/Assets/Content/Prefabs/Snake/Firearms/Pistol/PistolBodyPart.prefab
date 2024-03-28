@@ -160,7 +160,7 @@ MonoBehaviour:
     ActionCooldown: 1.5
     Health: 1
     ProjectileSpeed: 15
-    Damage: 1
+    Damage: 30
     AreaOfEffect: 3
     PierceAmount: 0
     Range: 15

@@ -158,7 +158,7 @@ MonoBehaviour:
   - {fileID: 1221415978638707027}
   m_DetectionDelay: 0.05
   m_ContextSolver: {fileID: 1221415978638707038}
-  m_Health: 2
+  m_MaxHealth: 100
   m_RotationSpeed: 2
   m_MoveSpeed: 6
   m_MoneyDrop: 2

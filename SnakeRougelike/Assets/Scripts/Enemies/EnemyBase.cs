@@ -27,6 +27,7 @@ public enum EnemyState
     Damaged
 }
 
+[RequireComponent(typeof(HealthController))]
 public class EnemyBase : MonoBehaviour
 {
     //AI
@@ -49,7 +50,7 @@ public class EnemyBase : MonoBehaviour
     protected Vector2 m_CurrentMovementDirection;
     //AI
 
-    [SerializeField] private int m_Health = 5;
+    [SerializeField] private int m_MaxHealth = 5;
     [SerializeField] private float m_RotationSpeed = 3;
     [SerializeField] private float m_MoveSpeed = 5;
     [SerializeField] private int m_MoneyDrop = 2;
@@ -57,6 +58,7 @@ public class EnemyBase : MonoBehaviour
     private SpriteRenderer m_SpriteRenderer;
     protected float m_DamagedTime = 0f;
 
+    private HealthController m_HealthController;
     [SerializeField] private float m_FlashDuration = 0.2f;
     [SerializeField] private Color m_FlashColor = Color.white;
 
@@ -83,6 +85,11 @@ public class EnemyBase : MonoBehaviour
         m_Collider = gameObject.GetComponent<Collider2D>();
 
         m_StartColor = m_SpriteRenderer.color;
+
+        m_HealthController = gameObject.GetComponent<HealthController>();
+        m_HealthController.SetupHealthController(m_MaxHealth);
+
+        UIHealthBarController.Instance.CreateNewHealthBar(m_HealthController);
 
         SoundManager.Instance.PlayGeneralSound(SFXType.EnemySpawn, true);
 
@@ -153,14 +160,14 @@ public class EnemyBase : MonoBehaviour
 
     public void OnTakeDamage(int InDamage)
     {
-        m_Health -= InDamage;
+        m_HealthController.TakeDamage(InDamage);
 
         GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
         gameStats.DamageDealt += InDamage;
 
         SoundManager.Instance.PlayGeneralSound(SFXType.EnemyHit, true);
-        GameManager.Instance.SpawnDamageText(transform.position + transform.up * 2, InDamage);
-        if (m_Health <= 0)
+        GameManager.Instance.SpawnDamageText(transform.position, InDamage);
+        if (m_HealthController.IsDead())
         {
             Die();
             return;

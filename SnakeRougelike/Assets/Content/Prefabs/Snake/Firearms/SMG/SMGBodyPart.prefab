@@ -136,10 +136,10 @@ MonoBehaviour:
   m_Part: 4
   m_Classes: 01000000
   m_Stats:
-    ActionCooldown: 0.2
-    Health: 1
+    ActionCooldown: 0.25
+    Health: 5
     ProjectileSpeed: 9
-    Damage: 1
+    Damage: 10
     AreaOfEffect: 0
     PierceAmount: 0
     Range: 10

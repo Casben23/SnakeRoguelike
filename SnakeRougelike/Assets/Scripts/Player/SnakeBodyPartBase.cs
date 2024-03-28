@@ -29,7 +29,7 @@ public class WeaponPartStats : ICloneable
     }
 }
 
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator), typeof(HealthController))]
 public class SnakeBodyPartBase : MonoBehaviour
 {
     [SerializeField] private EBodyPart m_Part;
@@ -44,12 +44,12 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     private Animator m_Animator;
 
-    private int m_CurrentHealth = 1;
     private SpriteRenderer m_SpriteRenderer;
     private Color m_StartColor;
     private bool m_IsFlashing = false;
 
     private float m_CurrentActionCooldown = 0f;
+    private HealthController m_HealthController;
 
     SnakeBodyController m_BodyController;
 
@@ -74,9 +74,9 @@ public class SnakeBodyPartBase : MonoBehaviour
     }
     public void TakeDamage()
     {
-        m_CurrentHealth -= 1;
+        m_HealthController.TakeDamage(1);
 
-        if (m_CurrentHealth <= 0)
+        if (m_HealthController.IsDead())
         {
             m_BodyController?.RemoveBodyPart(gameObject);
         }
@@ -170,7 +170,11 @@ public class SnakeBodyPartBase : MonoBehaviour
         m_Animator = gameObject.GetComponent<Animator>();
 
         m_StartColor = m_SpriteRenderer.color;
-        m_CurrentHealth = m_Stats.Health;
+
+        m_HealthController = gameObject.GetComponent<HealthController>();
+        m_HealthController.SetupHealthController(m_Stats.Health);
+
+        UIHealthBarController.Instance.CreateNewHealthBar(m_HealthController);
     }
 
     private void Update()
