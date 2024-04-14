@@ -5,18 +5,12 @@ using UnityEngine.UIElements;
 
 public class SnakeHeadController : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     [SerializeField] private float m_MoveSpeed = 10f;
     [SerializeField] private float m_RotationSpeed = 10f;
-    [SerializeField] private LayerMask m_BodyLayerMask;
-    [SerializeField] private float m_TimeUntilCanEat = 2;
     [SerializeField] private GameObject m_DeathEffect;
+    
     private Vector2 m_CurrentMousePosition;
     private SnakeBodyController m_BodyController;
-    private bool m_HasEaten = false;
-
-    private float m_CurrentTimeUntilCanEat = 0;
     private bool m_IsDead = false;
 
     void Start()
@@ -24,7 +18,6 @@ public class SnakeHeadController : MonoBehaviour
         m_BodyController = gameObject.GetComponent<SnakeBodyController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (m_BodyController.IsDead())
@@ -43,39 +36,7 @@ public class SnakeHeadController : MonoBehaviour
         UpdateRotation();
         UpdateMovement();
 
-        TryEatBody();
-
         m_BodyController.UpdateMovement(m_MoveSpeed);
-    }
-
-    public void SetEatCoolDown(float InTime)
-    {
-        m_CurrentTimeUntilCanEat = InTime;
-    }
-
-    void TryEatBody()
-    {
-        if (m_HasEaten)
-        {
-            if(m_CurrentTimeUntilCanEat <= 0)
-            {
-                m_HasEaten = false;
-            }
-            else
-            {
-                m_CurrentTimeUntilCanEat -= Time.deltaTime;
-                return;
-            }
-        }
-
-        Collider2D collider = Physics2D.OverlapCircle(transform.position + transform.up, 0.2f, m_BodyLayerMask);
-
-        if (collider == null)
-            return;
-
-        m_BodyController.RemoveBodyPart(collider.gameObject);
-        m_HasEaten = true;
-        m_CurrentTimeUntilCanEat = m_TimeUntilCanEat;
     }
 
     void UpdateMousePosition()

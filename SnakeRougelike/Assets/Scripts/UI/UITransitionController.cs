@@ -62,7 +62,6 @@ public class UITransitionController : MonoBehaviour
         m_CashGainedText.text = "Cash Gained: [<color=#78E08F>" + gameStats.CashGainedThisLevel.ToString() + "</color=>]";
         m_EnemiesKilledText.text = "Enemies Killed: [<color=#78E08F>" + gameStats.EnemiesKilledThisLevel.ToString() + "</color=>]";
         m_BodyPartsLostText.text = "Parts lost: [<color=#78E08F>" + gameStats.PartsLostThisLevel.ToString() + "</color=>]";
-
         StartCoroutine(StatSequence());
     }
 
@@ -100,7 +99,9 @@ public class UITransitionController : MonoBehaviour
 
     public void HideTransition()
     {
-        m_CurrentActionOnComplete();
+        if(m_CurrentActionOnComplete != null)
+            m_CurrentActionOnComplete();
+
         LeanTween.scale(m_TransitionImage, new Vector3(0, 0, 1), 1.5f).setIgnoreTimeScale(true).setOnComplete(DisableText);
     }
 

@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class ProjectileBase : MonoBehaviour
 {
+    [SerializeField] private GameObject m_HitEffect;
+
     protected SnakeBodyPartBase m_Instigator;
     protected WeaponPartStats m_InstigatorStats;
 
@@ -48,6 +50,13 @@ public class ProjectileBase : MonoBehaviour
     {
         if (collision.TryGetComponent<EnemyBase>(out EnemyBase enemy))
         {
+            EventModifierData eventData = new EventModifierData();
+            eventData.Projectile = this;
+            eventData.Enemy = enemy;
+            eventData.BodyPart = m_Instigator;
+
+            EventManager.Instance.ProjectileHitEnemy(eventData);
+
             enemy.OnTakeDamage(m_InstigatorStats.Damage);
 
             if (m_InstigatorStats.PierceAmount <= 0)
@@ -56,19 +65,32 @@ public class ProjectileBase : MonoBehaviour
                 return;
             }
 
+
             m_InstigatorStats.PierceAmount -= 1;
         }
     }
 
     private void RemoveProjectile()
     {
+        if(m_HitEffect != null)
+        {
+            SpawnHitEffect();
+        }
+
         Destroy(gameObject);
+    }
+
+    private void SpawnHitEffect()
+    {
+        Quaternion rotation = Quaternion.LookRotation(transform.up);
+
+        Instantiate(m_HitEffect, transform.position, rotation);
     }
 
     public void SetInstigator(SnakeBodyPartBase InInstigator)
     {
         m_Instigator = InInstigator;
 
-        m_InstigatorStats = (WeaponPartStats)InInstigator.GetWeaponPartStats().Clone();
+        m_InstigatorStats = (WeaponPartStats)InInstigator.GetWeaponPartModifiedStats().Clone();
     }
 }

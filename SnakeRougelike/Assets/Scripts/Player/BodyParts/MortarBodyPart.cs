@@ -26,7 +26,7 @@ public class MortarBodyPart : SnakeBodyPartBase
             return;
         }
 
-        GameObject newProjectile = SpawnProjectile(m_Projectile, InTarget.transform.position, Quaternion.identity);
+        GameObject newProjectile = ProjectileManager.Instance.SpawnProjectile(this, m_Projectile, InTarget.transform.position, Quaternion.identity);
 
         if (newProjectile.TryGetComponent<ProjectileBase>(out ProjectileBase projectile))
         {

@@ -18,15 +18,5 @@ MonoBehaviour:
   Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: 22821e9ae2467f942bdf83e6523076d1, type: 3}
   Cost: 1
   Name: Pistol
-  Description: 'DAMAGE: [LOW] @
-
-    Action rate: [MEDIUM] @
-
-    range: [medium]
-    @
-
-    PIERCE: [0] @
-
-    spread: [low] @
-
-    Targeting: [Closest]'
+  Description: 'DAMAGE: [LOW]<br>Action rate: [MEDIUM]<br>range: [medium]<br>PIERCE:
+    [0]<br>spread: [low]<br>Targeting: [Closest]'

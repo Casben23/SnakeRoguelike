@@ -24,7 +24,7 @@ public class DamageTextController : MonoBehaviour
         transform.localScale = new Vector3(0, 0, 1);
         LeanTween.scale(gameObject, new Vector3(1, 1, 1), 0.3f).setEaseOutElastic();
         LeanTween.moveY(gameObject, transform.position.y + 0.5f, 0.8f).setEaseOutElastic();
-
+        
         m_Text.text = InDamageAmount.ToString();
     }
 

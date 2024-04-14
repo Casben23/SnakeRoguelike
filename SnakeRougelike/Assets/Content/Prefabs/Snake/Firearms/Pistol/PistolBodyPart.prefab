@@ -156,16 +156,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Part: 3
   m_Classes: 01000000
-  m_Stats:
-    ActionCooldown: 1.5
-    Health: 1
-    ProjectileSpeed: 15
+  m_BaseStats:
+    ActionCooldown: 1
+    Health: 5
+    ProjectileSpeed: 20
     Damage: 30
-    AreaOfEffect: 3
+    AreaOfEffect: 0
     PierceAmount: 0
-    Range: 15
+    Range: 5
     ProjectileAmount: 1
-    Spread: 0.272
+    Spread: 0.301
   m_EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 128

@@ -20,21 +20,7 @@ public class MortarProjectile : ProjectileBase
             SoundManager.Instance.PlayGeneralSound(SFXType.MortarExplode, false);
         }
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, m_InstigatorStats.AreaOfEffect, m_EnemyLayerMask);
-
-        if (colliders.Length <= 0)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        foreach(Collider2D coll in colliders)
-        {
-            if(coll.TryGetComponent<EnemyBase>(out EnemyBase enemy))
-            {
-                enemy.OnTakeDamage(m_InstigatorStats.Damage);
-            }
-        }
+        ProjectileManager.Instance.TryDoExplosionDamage(transform.position, m_InstigatorStats.AreaOfEffect, m_InstigatorStats.Damage, m_EnemyLayerMask);
 
         Destroy(gameObject);
     }

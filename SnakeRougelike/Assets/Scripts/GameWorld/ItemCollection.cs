@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ItemCollection : MonoBehaviour
@@ -26,7 +27,7 @@ public class ItemCollection : MonoBehaviour
 
 
     [SerializeField] private List<SnakeBodyPartSO> m_SnakeBodyParts = new List<SnakeBodyPartSO>();
-
+    [SerializeField] private List<ModifierBase> m_ModifierItems = new List<ModifierBase>();
 
     public SnakeBodyPartSO GetRandomSnakeBodyPart()
     {
@@ -52,6 +53,23 @@ public class ItemCollection : MonoBehaviour
         Debug.LogError("Failed to get part: [" + InPart.ToString() + "] Level: " + InLevel.ToString());
 
         return null;
+    }
+
+    public List<ModifierBase> GetRandomItemModifiers(int InAmount)
+    {
+        List<ModifierBase> resultList = new List<ModifierBase>();
+        List<ModifierBase> tempModifiers = new List<ModifierBase>(m_ModifierItems);
+       
+        for(int i = 0; i < InAmount; i++)
+        {
+            int randomIndex = Random.Range(0, tempModifiers.Count);
+
+            resultList.Add(tempModifiers[randomIndex]);
+            tempModifiers.RemoveAt(randomIndex);
+            m_ModifierItems.Remove(resultList[i]);
+        }
+
+        return resultList;
     }
 
     public Sprite GetPartSprite(EBodyPart InBodyPart)

@@ -155,17 +155,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Part: 0
-  m_Classes: 00000000
-  m_Stats:
-    ActionCooldown: 5
-    Health: 1
+  m_BaseStats:
+    ActionCooldown: 4
+    Health: 5
     ProjectileSpeed: 0
-    Damage: 50
-    AreaOfEffect: 4
+    Damage: 40
+    AreaOfEffect: 3
     PierceAmount: 0
-    Range: 600
+    Range: 200
     ProjectileAmount: 1
     Spread: 0
+  m_IsPassive: 0
   m_EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 128

@@ -32,4 +32,10 @@ public class UIButtonPop : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         LeanTween.cancel(gameObject);
         transform.localScale = new Vector3(1, 1, 1);
     }
+
+    public void OnDisable()
+    {
+        LeanTween.cancel(gameObject);
+        transform.localScale = new Vector3(1, 1, 1);
+    }
 }

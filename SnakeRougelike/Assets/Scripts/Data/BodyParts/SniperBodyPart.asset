@@ -18,15 +18,5 @@ MonoBehaviour:
   Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: e848a885b52a8ef4ab0db3a7dbd8744e, type: 3}
   Cost: 1
   Name: Sniper
-  Description: 'DAMAGE: [high] @
-
-    Action rate: [slow] @
-
-    range: [far] @
-
-    PIERCE:
-    [0] @
-
-    spread: [very low] @
-
-    targeting: [furthest]'
+  Description: 'DAMAGE: [high]<br>Action rate: [slow]<br>range: [far]<br>PIERCE:
+    [0]<br>spread: [very low]<br>targeting: [furthest]'

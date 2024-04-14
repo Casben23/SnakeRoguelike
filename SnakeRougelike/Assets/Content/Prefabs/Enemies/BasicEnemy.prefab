@@ -195,7 +195,7 @@ MonoBehaviour:
   m_PlayerLayerMask:
     serializedVersion: 2
     m_Bits: 576
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
 --- !u!114 &1221415978638707028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78eb302e5c7b62740824c76b2464b727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
 --- !u!114 &1221415978638707036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Radius: 3
   m_AgentColliderSize: 2
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
 --- !u!50 &1221415978638707035
 Rigidbody2D:
   serializedVersion: 4

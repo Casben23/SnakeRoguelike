@@ -18,13 +18,5 @@ MonoBehaviour:
   Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: 8b8aabdfa53898e45bfd6277978eb5e1, type: 3}
   Cost: 1
   Name: Mortar
-  Description: 'DAMAGE: [HIGH] @
-
-    Action rate: [very SLOW] @
-
-    range: [unlimited]
-    @
-
-    AOE: [3m] @
-
-    Targeting: [Random]'
+  Description: 'DAMAGE: [HIGH]<br>Action rate: [very SLOW]<br>range: [unlimited]<br>AOE:
+    [3m]<br>Targeting: [Random]'

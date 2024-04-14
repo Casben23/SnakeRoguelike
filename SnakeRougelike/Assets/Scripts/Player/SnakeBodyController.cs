@@ -33,7 +33,7 @@ public enum EBodyPart
     ArtilleryLoader = 6,
     BoxOfTNT = 7,
     BoxOfGuns = 8,
-    DoubleBarrels = 9, 
+    DoubleBarrels = 9,
 
     COUNT = 11
 }
@@ -71,7 +71,7 @@ public class SnakeBodyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if(m_ActiveBodyParts.Count >= 1)
+            if (m_ActiveBodyParts.Count >= 1)
                 RemoveBodyPart(m_ActiveBodyParts[m_ActiveBodyParts.Count - 1]);
         }
 
@@ -84,6 +84,11 @@ public class SnakeBodyController : MonoBehaviour
     public Dictionary<EBodyPart, int> GetPartCollection()
     {
         return m_BodyPartCollection;
+    }
+
+    public List<GameObject> GetActiveParts()
+    {
+        return m_ActiveBodyParts;
     }
 
     public void UpdateMovement(float InCurrentMoveSpeed)
@@ -131,13 +136,13 @@ public class SnakeBodyController : MonoBehaviour
 
         if (HasPart(newPartType))
         {
-            if(ShouldLevelUp(newPartType, out int newLevel))
+            if (ShouldLevelUp(newPartType, out int newLevel))
             {
                 GameObject newPartObject = ItemCollection.Instance.GetBodyPartWithLevel(newPartType, newLevel);
 
                 if (newLevel == 2)
                     SoundManager.Instance.PlayGeneralSound(SFXType.PartLevelUp2, false);
-                else if(newLevel == 3)
+                else if (newLevel == 3)
                     SoundManager.Instance.PlayGeneralSound(SFXType.PartLevelUp3, false);
 
                 UpgradePart(newPartObject);
@@ -148,6 +153,7 @@ public class SnakeBodyController : MonoBehaviour
                 m_BodyPartCollection[newPartType] += 1;
             }
 
+            UpdatePartStats();
             return;
         }
 
@@ -157,15 +163,18 @@ public class SnakeBodyController : MonoBehaviour
         newPart?.GetComponent<SnakeBodyPartBase>().SetController(this);
         m_ActiveBodyParts.Add(newPart);
         m_BodyPartCollection[newPartType] += 1;
+
+        // Fix modifiers since new modifiers could have been added
+        UpdatePartStats();
     }
 
     public void RemoveBodyPart(GameObject InPartToRemove)
     {
         if (m_ActiveBodyParts.Count > 1)
         {
-            foreach(GameObject part in m_ActiveBodyParts)
+            foreach (GameObject part in m_ActiveBodyParts)
             {
-                if(part == InPartToRemove)
+                if (part == InPartToRemove)
                 {
                     SoundManager.Instance.PlayGeneralSound(SFXType.BodyPartDestroyed, false);
                     Instantiate(m_DestroyEffect, part.transform.position, Quaternion.identity);
@@ -182,14 +191,18 @@ public class SnakeBodyController : MonoBehaviour
 
                     GameStatisticsManager.Instance.GetGameStats().PartsLostThisLevel += 1;
 
-                    if(m_ActiveBodyParts.Count <= 1)
+                    if (m_ActiveBodyParts.Count <= 1)
                     {
                         Die();
+                        return;
                     }
 
                     break;
                 }
             }
+
+            // Fix modifiers since new modifiers could have been added
+            UpdatePartStats();
         }
     }
 
@@ -218,7 +231,7 @@ public class SnakeBodyController : MonoBehaviour
     private void UpgradePart(GameObject InNewPart)
     {
         SnakeBodyPartBase newPartBase = InNewPart.GetComponent<SnakeBodyPartBase>();
-        if(newPartBase == null)
+        if (newPartBase == null)
         {
             Debug.LogError("Failed to get part: " + newPartBase.GetType().ToString());
             return;
@@ -228,7 +241,7 @@ public class SnakeBodyController : MonoBehaviour
         {
             if (m_ActiveBodyParts[i].TryGetComponent<SnakeBodyPartBase>(out SnakeBodyPartBase activeBodyBase))
             {
-                if(activeBodyBase.GetPart() == newPartBase.GetPart())
+                if (activeBodyBase.GetPart() == newPartBase.GetPart())
                 {
                     GameObject newPart = Instantiate(InNewPart, m_ActiveBodyParts[i].transform.position, Quaternion.identity);
                     newPart?.GetComponent<SnakeBodyPartBase>().SetController(this);
@@ -237,15 +250,28 @@ public class SnakeBodyController : MonoBehaviour
                     m_ActiveBodyParts.RemoveAt(i);
                     Destroy(bodyPartToRemove);
 
-                    m_ActiveBodyParts.Insert(i ,newPart);
+                    m_ActiveBodyParts.Insert(i, newPart);
                 }
+            }
+        }
+    }
+
+    private void UpdatePartStats()
+    {
+        ModifierController.Instance.ReapplyModifiers();
+
+        foreach (GameObject bodyPartObj in m_ActiveBodyParts)
+        {
+            if (bodyPartObj.TryGetComponent<SnakeBodyPartBase>(out SnakeBodyPartBase bodyPartBase))
+            {
+                bodyPartBase.UpdateStats();
             }
         }
     }
 
     private bool HasPart(EBodyPart InPartToCheck)
     {
-        if(m_BodyPartCollection.TryGetValue(InPartToCheck, out int amount))
+        if (m_BodyPartCollection.TryGetValue(InPartToCheck, out int amount))
         {
             if (amount <= 0)
                 return false;
@@ -258,14 +284,14 @@ public class SnakeBodyController : MonoBehaviour
 
     private bool ShouldLevelUp(EBodyPart InPartToCheck, out int OutLevel)
     {
-        if(m_BodyPartCollection.TryGetValue(InPartToCheck, out int amount))
+        if (m_BodyPartCollection.TryGetValue(InPartToCheck, out int amount))
         {
             if (amount == 2)
             {
                 OutLevel = 2;
                 return true;
             }
-            else if(amount == 8)
+            else if (amount == 8)
             {
                 OutLevel = 3;
                 return true;

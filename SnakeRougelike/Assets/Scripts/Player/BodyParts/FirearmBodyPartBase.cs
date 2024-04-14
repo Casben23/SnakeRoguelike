@@ -50,9 +50,9 @@ public class FirearmBodyPartBase : SnakeBodyPartBase
             return;
         }
 
-        for (int i = 0; i < m_Stats.ProjectileAmount; i++)
+        for (int i = 0; i < m_ModifiedStats.ProjectileAmount; i++)
         {
-            GameObject newProjectile = SpawnProjectile(m_Projectile, transform.position, Quaternion.identity);
+            GameObject newProjectile = ProjectileManager.Instance.SpawnProjectile(this, m_Projectile, transform.position, Quaternion.identity);
 
             if (newProjectile.TryGetComponent<ProjectileBase>(out ProjectileBase projectile))
             {

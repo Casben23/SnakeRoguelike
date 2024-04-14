@@ -87,7 +87,7 @@ public class EnemyBase : MonoBehaviour
         m_StartColor = m_SpriteRenderer.color;
 
         m_HealthController = gameObject.GetComponent<HealthController>();
-        m_HealthController.SetupHealthController(m_MaxHealth);
+        m_HealthController.SetupHealthController(m_MaxHealth * GameManager.Instance.GetCurrentLevel() / 2);
 
         UIHealthBarController.Instance.CreateNewHealthBar(m_HealthController);
 
@@ -132,8 +132,8 @@ public class EnemyBase : MonoBehaviour
 
     public void Die()
     {
-        if (m_Animator != null)
-            m_Animator.SetBool("IsDead", true);
+        if (m_IsDead == true)
+            return;
 
         if (m_Collider != null)
             m_Collider.enabled = false;
@@ -150,23 +150,45 @@ public class EnemyBase : MonoBehaviour
 
         Instantiate(m_DeathEffect, transform.position, Quaternion.identity);
 
-        Destroy(gameObject, 1.5f);
+        LeanTween.scale(gameObject, new Vector3(0, 0, 0), 0.3f).setEaseOutCubic().setOnComplete(DestroyEnemy);
+
+        GameState.Instance.AddEnemiesKilled(1);
     }
 
-    private void OnDestroy()
+    void DestroyEnemy()
     {
+        EventModifierData eventData = new EventModifierData();
+        eventData.Enemy = this;
+
+        EventManager.Instance.EnemyDeath(eventData);
+
         WaveController.Instance.OnEnemyDeath();
+
+        Destroy(gameObject);
     }
 
     public void OnTakeDamage(int InDamage)
     {
+        if (m_HealthController == null)
+        {
+            Die();
+            return;
+        }
+
         m_HealthController.TakeDamage(InDamage);
+        GameState.Instance.AddDamageDone(InDamage);
 
         GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
         gameStats.DamageDealt += InDamage;
 
         SoundManager.Instance.PlayGeneralSound(SFXType.EnemyHit, true);
         GameManager.Instance.SpawnDamageText(transform.position, InDamage);
+
+        EventModifierData eventData = new EventModifierData();
+        eventData.Enemy = this;
+
+        EventManager.Instance.EnemyTakeDamage(eventData);
+
         if (m_HealthController.IsDead())
         {
             Die();
@@ -181,7 +203,7 @@ public class EnemyBase : MonoBehaviour
         if (collision.gameObject.TryGetComponent<SnakeBodyPartBase>(out SnakeBodyPartBase bodyPart))
         {
             bodyPart.TakeDamage();
-            Die();
+            OnTakeDamage(m_HealthController.GetCurrentHealth());
         }
     }
 

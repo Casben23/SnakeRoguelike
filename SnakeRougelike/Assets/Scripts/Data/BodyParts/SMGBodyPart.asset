@@ -18,15 +18,5 @@ MonoBehaviour:
   Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: ef710edbd73e65d4a9181425b8a884ad, type: 3}
   Cost: 1
   Name: SMG
-  Description: 'DAMAGE: [LOW] @
-
-    Action rate: [fast] @
-
-    range: [short] @
-
-    PIERCE:
-    [0] @
-
-    spread: [high] @
-
-    Targeting: [Closest] '
+  Description: 'DAMAGE: [LOW]<br>Action rate: [fast]<br>range: [short]<br>PIERCE:
+    [0]<br>spread: [high]<br>Targeting: [Closest] '

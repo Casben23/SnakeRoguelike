@@ -15,7 +15,7 @@ public class WeaponPartStats : ICloneable
     [Header("Combat")]
     public float ProjectileSpeed = 15;
     public int Damage = 1;
-    public int AreaOfEffect = 3;
+    public float AreaOfEffect = 3;
     public int PierceAmount = 0;
     public float Range = 5;
     public int ProjectileAmount = 1;
@@ -33,11 +33,12 @@ public class WeaponPartStats : ICloneable
 public class SnakeBodyPartBase : MonoBehaviour
 {
     [SerializeField] private EBodyPart m_Part;
-    [SerializeField] private List<EBodyPartClass> m_Classes;
 
-    [SerializeField] protected WeaponPartStats m_Stats;
+    [SerializeField] private WeaponPartStats m_BaseStats = new WeaponPartStats();
+    protected WeaponPartStats m_ModifiedStats = new WeaponPartStats();
 
     [Header("Misc")]
+    [SerializeField] private bool m_IsPassive = false;
     [SerializeField] private LayerMask m_EnemyLayerMask;
     [SerializeField] private float m_FlashDuration = 0.2f;
     [SerializeField] private Color m_FlashColor = Color.white;
@@ -53,9 +54,14 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     SnakeBodyController m_BodyController;
 
-    public WeaponPartStats GetWeaponPartStats()
+    public WeaponPartStats GetWeaponPartBaseStats()
     {
-        return m_Stats;
+        return m_BaseStats;
+    }
+
+    public WeaponPartStats GetWeaponPartModifiedStats()
+    {
+        return m_ModifiedStats;
     }
 
     public EBodyPart GetPart()
@@ -63,15 +69,11 @@ public class SnakeBodyPartBase : MonoBehaviour
         return m_Part;
     }
 
-    public List<EBodyPartClass> GetClasses()
-    {
-        return m_Classes;
-    }
-
     public void SetController(SnakeBodyController InController)
     {
         m_BodyController = InController;
     }
+
     public void TakeDamage()
     {
         m_HealthController.TakeDamage(1);
@@ -82,14 +84,32 @@ public class SnakeBodyPartBase : MonoBehaviour
         }
     }
 
+    public void UpdateStats()
+    {
+        m_ModifiedStats = (WeaponPartStats)m_BaseStats.Clone();
+
+        Modifiers currentMods = ModifierController.Instance.GetModifiers();
+
+        m_ModifiedStats.Health = Mathf.FloorToInt(m_ModifiedStats.Health * currentMods.Mod_MaxHealth);
+        m_ModifiedStats.Damage = Mathf.FloorToInt(m_ModifiedStats.Damage * currentMods.Mod_Damage);
+        m_ModifiedStats.Spread *= currentMods.Mod_Spread;
+        m_ModifiedStats.ActionCooldown *= currentMods.Mod_ActionCooldown;
+
+        m_ModifiedStats.Range *= currentMods.Mod_Range;
+        m_ModifiedStats.ProjectileAmount *= currentMods.Mod_ProjectileAmount;
+        m_ModifiedStats.ProjectileSpeed *= currentMods.Mod_ProjectileSpeed;
+        m_ModifiedStats.PierceAmount += currentMods.Mod_PierceAmount;
+        m_ModifiedStats.AreaOfEffect *= currentMods.Mod_AreaOfEffect;
+    }
+
     protected List<Collider2D> GetEnemiesInRange()
     {
-        return Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+        return Physics2D.OverlapCircleAll(transform.position, m_BaseStats.Range, m_EnemyLayerMask).ToList();
     }
 
     protected Collider2D GetClosestEnemyInRange()
     {
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_BaseStats.Range, m_EnemyLayerMask).ToList();
 
         if (colliders.Count <= 0)
             return null;
@@ -106,7 +126,7 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     protected Collider2D GetFurthestEnemyInRange()
     {
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_BaseStats.Range, m_EnemyLayerMask).ToList();
 
         if (colliders.Count <= 0)
             return null;
@@ -123,7 +143,7 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     protected Collider2D GetRandomEnemyInRange()
     {
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_Stats.Range, m_EnemyLayerMask).ToList();
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_BaseStats.Range, m_EnemyLayerMask).ToList();
 
         if (colliders.Count <= 0)
             return null;
@@ -135,23 +155,13 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     protected virtual void PerformAction()
     {
-        m_CurrentActionCooldown = m_Stats.ActionCooldown;
+        if (m_IsPassive)
+            return;
+
+        m_CurrentActionCooldown = m_BaseStats.ActionCooldown;
         m_Animator.SetTrigger("OnAction");
 
         Flash();
-    }
-
-    protected GameObject SpawnProjectile(GameObject InProjectileToSpawn, Vector2 InPosition, Quaternion InRotation)
-    {
-        GameObject newProjectile = Instantiate(InProjectileToSpawn, InPosition, InRotation);
-
-        ProjectileBase projectileBase = newProjectile.GetComponent<ProjectileBase>();
-        if (projectileBase == null)
-            return null;
-
-        projectileBase.SetInstigator(this);
-
-        return newProjectile;
     }
 
     private void Flash()
@@ -164,7 +174,7 @@ public class SnakeBodyPartBase : MonoBehaviour
 
     private void Start()
     {
-        m_CurrentActionCooldown = m_Stats.ActionCooldown;
+        m_CurrentActionCooldown = m_BaseStats.ActionCooldown;
 
         m_SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         m_Animator = gameObject.GetComponent<Animator>();
@@ -172,13 +182,16 @@ public class SnakeBodyPartBase : MonoBehaviour
         m_StartColor = m_SpriteRenderer.color;
 
         m_HealthController = gameObject.GetComponent<HealthController>();
-        m_HealthController.SetupHealthController(m_Stats.Health);
+        m_HealthController.SetupHealthController(m_BaseStats.Health);
 
         UIHealthBarController.Instance.CreateNewHealthBar(m_HealthController);
     }
 
     private void Update()
     {
+        if (m_IsPassive)
+            return;
+
         if (m_CurrentActionCooldown <= 0)
         {
             PerformAction();

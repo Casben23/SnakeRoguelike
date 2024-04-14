@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6060847174948909141}
   - component: {fileID: 7002020660594009775}
   - component: {fileID: 6820479460768687904}
+  - component: {fileID: 6114679854507082383}
   - component: {fileID: -5472776308289674864}
   m_Layer: 9
   m_Name: SMGBodyPart
@@ -134,17 +135,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Part: 4
-  m_Classes: 01000000
-  m_Stats:
-    ActionCooldown: 0.25
+  m_BaseStats:
+    ActionCooldown: 0.3
     Health: 5
-    ProjectileSpeed: 9
+    ProjectileSpeed: 15
     Damage: 10
     AreaOfEffect: 0
     PierceAmount: 0
     Range: 10
     ProjectileAmount: 1
-    Spread: 0.499
+    Spread: 0.527
+  m_IsPassive: 0
   m_EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -153,6 +154,19 @@ MonoBehaviour:
   m_Projectile: {fileID: 300117191342477718, guid: 9b8240781b8c94a45bb9ef065b75bf99, type: 3}
   m_ActionSound: 4
   m_TargetType: 2
+--- !u!114 &6114679854507082383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561833913576612932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ee6554e1c2b414e89121702fb4fe4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ModifierAmount: 0.05
 --- !u!50 &-5472776308289674864
 Rigidbody2D:
   serializedVersion: 4

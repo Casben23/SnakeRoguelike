@@ -43,20 +43,16 @@ public class UIPurchasePart : UIPurchaseButtonBase
         if (m_PartInfo == null)
             return;
 
-        SnakeBodyPartBase bodyPartbase = m_CurrentSnakePart.Lvl1BodyPartPrefab.GetComponent<SnakeBodyPartBase>();
-        if (bodyPartbase == null)
-            return;
 
-        List<EBodyPartClass> classes = bodyPartbase.GetClasses();
-        string classString = "";
-        foreach(EBodyPartClass classEnum in classes)
+        string modifierDescription = "";
+        if(m_CurrentSnakePart.Lvl1BodyPartPrefab.TryGetComponent<ModifierBase>(out ModifierBase modBase))
         {
-            classString += classEnum.ToString();
+            modifierDescription = modBase.GetModifierDescription();
         }
 
         string fixedDescription = m_CurrentSnakePart.Description.Replace("@", "\n");
 
-        m_PartInfo.Show(transform.localPosition, m_CurrentSnakePart.Name, classString, fixedDescription);
+        m_PartInfo.Show(transform.localPosition, m_CurrentSnakePart.Name, fixedDescription, modifierDescription);
     }
 
     public override void OnPointerExit(PointerEventData eventData)
