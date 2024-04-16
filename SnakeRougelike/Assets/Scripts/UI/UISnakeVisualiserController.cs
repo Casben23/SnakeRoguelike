@@ -24,7 +24,17 @@ public class UISnakeVisualiserController : MonoBehaviour
         foreach (KeyValuePair<EBodyPart, int> item in collection)
         {
             if (item.Value == 0)
+            {
+                foreach (UISnakeVisualiser visualiser in m_VisualisersList)
+                {
+                    if (visualiser.GetCurrentPart() == item.Key)
+                    {
+                        m_VisualisersList.Remove(visualiser);
+                        Destroy(visualiser.gameObject);
+                    }
+                }
                 continue;
+            }
 
             bool alreadyExists = false;
 
@@ -50,17 +60,20 @@ public class UISnakeVisualiserController : MonoBehaviour
             m_VisualisersList.Add(newVisualiser);
         }
 
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //Set child index of each visualiser to represent the right order
+        List<GameObject> activeParts = bodyController.GetActiveParts();
+        foreach(UISnakeVisualiser visualiser in m_VisualisersList)
+        {
+            for (int i = 0; i < activeParts.Count; i++)
+            {
+                if (activeParts[i].TryGetComponent<SnakeBodyPartBase>(out SnakeBodyPartBase partBase))
+                {
+                    if(partBase.GetPart() == visualiser.GetCurrentPart())
+                    {
+                        visualiser.gameObject.transform.SetSiblingIndex(i + 1);
+                    }
+                }
+            }
+        }
     }
 }

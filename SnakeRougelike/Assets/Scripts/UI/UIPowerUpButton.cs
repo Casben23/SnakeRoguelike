@@ -22,5 +22,6 @@ public class UIPowerUpButton : MonoBehaviour
     {
         ModifierController.Instance.GiveItemModifier(m_CurrentModifier);
         GameManager.Instance.OnPowerUpChosen();
+        ItemCollection.Instance.RemoveItemFromCollection(m_CurrentModifier);
     }
 }

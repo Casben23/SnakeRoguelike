@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,6 +11,7 @@ public class EnemySpawn
 {
     public GameObject Enemy;
     public int Cost;
+    public int SpawnAfterLevel;
 }
 
 enum EWaveState
@@ -72,10 +74,10 @@ public class WaveController : MonoBehaviour
         int currentLevel = GameManager.Instance.GetCurrentLevel();
 
         m_CurrentSpawnValue = 1;
-        m_CurrentSpawnValue *= 10 * currentLevel;
+        m_CurrentSpawnValue = 10 * Mathf.RoundToInt(currentLevel * 0.6f);
 
-        int waveAmount = Mathf.FloorToInt(currentLevel);
-        m_WaveAmount = Mathf.Clamp(waveAmount, 1, 10);
+        int waveAmount = Mathf.RoundToInt(currentLevel * 0.4f);
+        m_WaveAmount = Mathf.Clamp(waveAmount, 1, 7);
     }
 
     private void StartNewWave()
@@ -89,7 +91,6 @@ public class WaveController : MonoBehaviour
         m_UIWaveText.gameObject?.GetComponent<Animator>().SetTrigger("NewWave");
 
         SoundManager.Instance.PlayGeneralSound(SFXType.NewWave, false);
-        //UI MANAGER CALL WAVE TEXT UPDATE!
     }
 
     // Update is called once per frame
@@ -128,15 +129,21 @@ public class WaveController : MonoBehaviour
     {
         if (m_SpawnManager.IsWaveCompleted())
         {
-            if(m_CurrentWave >= m_WaveAmount)
+            GameManager gameManager = GameManager.Instance;
+
+            int cashToGain = Mathf.RoundToInt(10 * (gameManager.GetCurrentLevel() * 0.3f));
+            if (m_CurrentWave >= m_WaveAmount)
             {
                 if (!GameManager.Instance.IsWaitingForNewLevel())
                 {
+                    gameManager.AddMoney(cashToGain);
                     GameManager.Instance.OnLevelComplete();
                 }
                 return;
             }
 
+           
+            gameManager.AddMoney(cashToGain);
             StartNewWave();
         }
     }
@@ -150,13 +157,14 @@ public class WaveController : MonoBehaviour
     private List<EnemySpawn> GetEnemyEncounterList()
     {
         List<EnemySpawn> resultEnemyList = new List<EnemySpawn>();
+        List<EnemySpawn> tempList = m_EnemySpawns.Where(spawn => spawn.SpawnAfterLevel <= GameManager.Instance.GetCurrentLevel()).ToList();
 
         int currentSpawnValue = m_CurrentSpawnValue;
         bool creatingList = true;
         while (creatingList)
         {
             int availableEnemies = 0;
-            foreach (EnemySpawn enemy in m_EnemySpawns)
+            foreach (EnemySpawn enemy in tempList)
             {
                 if (enemy.Cost <= currentSpawnValue)
                 {
@@ -170,14 +178,14 @@ public class WaveController : MonoBehaviour
             }
             else if (availableEnemies == 1)
             {
-                resultEnemyList.Add(m_EnemySpawns[0]);
-                currentSpawnValue -= m_EnemySpawns[0].Cost;
+                resultEnemyList.Add(tempList[0]);
+                currentSpawnValue -= tempList[0].Cost;
             }
             else
             {
                 int randomEnemyIndex = Random.Range(0, availableEnemies);
-                resultEnemyList.Add(m_EnemySpawns[randomEnemyIndex]);
-                currentSpawnValue -= m_EnemySpawns[randomEnemyIndex].Cost;
+                resultEnemyList.Add(tempList[randomEnemyIndex]);
+                currentSpawnValue -= tempList[randomEnemyIndex].Cost;
             }
         }
 

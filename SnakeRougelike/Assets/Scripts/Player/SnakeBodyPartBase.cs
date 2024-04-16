@@ -102,6 +102,26 @@ public class SnakeBodyPartBase : MonoBehaviour
         m_ModifiedStats.AreaOfEffect *= currentMods.Mod_AreaOfEffect;
     }
 
+    public WeaponPartStats GetModifiedStatClone()
+    {
+        WeaponPartStats resultStats = (WeaponPartStats)m_BaseStats.Clone();
+
+        Modifiers currentMods = ModifierController.Instance.GetModifiers();
+
+        resultStats.Health = Mathf.FloorToInt(resultStats.Health * currentMods.Mod_MaxHealth);
+        resultStats.Damage = Mathf.FloorToInt(resultStats.Damage * currentMods.Mod_Damage);
+        resultStats.Spread *= currentMods.Mod_Spread;
+        resultStats.ActionCooldown *= currentMods.Mod_ActionCooldown;
+
+        resultStats.Range *= currentMods.Mod_Range;
+        resultStats.ProjectileAmount *= currentMods.Mod_ProjectileAmount;
+        resultStats.ProjectileSpeed *= currentMods.Mod_ProjectileSpeed;
+        resultStats.PierceAmount += currentMods.Mod_PierceAmount;
+        resultStats.AreaOfEffect *= currentMods.Mod_AreaOfEffect;
+
+        return resultStats;
+    }
+
     protected List<Collider2D> GetEnemiesInRange()
     {
         return Physics2D.OverlapCircleAll(transform.position, m_BaseStats.Range, m_EnemyLayerMask).ToList();

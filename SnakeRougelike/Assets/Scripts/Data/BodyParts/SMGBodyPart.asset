@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Part: 4
   Lvl1BodyPartPrefab: {fileID: 2561833913576612932, guid: ef710edbd73e65d4a9181425b8a884ad, type: 3}
-  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: ef710edbd73e65d4a9181425b8a884ad, type: 3}
-  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: ef710edbd73e65d4a9181425b8a884ad, type: 3}
-  Cost: 1
+  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: 745f40d14d45b4046a9c52ec32fa7d82, type: 3}
+  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: 4c749d4113877e245a2a9419c47857e5, type: 3}
+  Cost: 8
   Name: SMG
-  Description: 'DAMAGE: [LOW]<br>Action rate: [fast]<br>range: [short]<br>PIERCE:
-    [0]<br>spread: [high]<br>Targeting: [Closest] '
+  Description: Rapidly fires @PA projectiles dealing @D damage. Targets closest critter

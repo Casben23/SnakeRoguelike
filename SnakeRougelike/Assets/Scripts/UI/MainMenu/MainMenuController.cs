@@ -20,7 +20,7 @@ public class MainMenuController : MonoBehaviour
     private void Start()
     {
         SetCurrentLayer((int)EMainMenuLayer.TitleScreen);
-        m_TransitionController.StartSequence(null, false, true);
+        m_TransitionController.StartSequence(null, 1f, false, true);
     }
 
     public void SetCurrentLayer(int InLayer)
@@ -51,7 +51,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnPlay()
     {
-        m_TransitionController.StartSequence(LoadNextLevel, false, false);
+        m_TransitionController.StartSequence(LoadNextLevel,1f, false, false);
     }
 
     private void LoadNextLevel()

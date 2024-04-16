@@ -36,7 +36,13 @@ public class SnakeHeadController : MonoBehaviour
         UpdateRotation();
         UpdateMovement();
 
-        m_BodyController.UpdateMovement(m_MoveSpeed);
+        List<GameObject> bodyParts = m_BodyController.GetActiveParts();
+        int bodyCount = bodyParts.Count;
+
+        float scalingFactor = 0.5f;
+        float scaledMoveSpeed = m_MoveSpeed + (scalingFactor * bodyCount);
+
+        m_BodyController.UpdateMovement(scaledMoveSpeed);
     }
 
     void UpdateMousePosition()
@@ -52,7 +58,15 @@ public class SnakeHeadController : MonoBehaviour
 
     void UpdateMovement()
     {
-        Vector2 newPosition = gameObject.transform.up * m_MoveSpeed * Time.deltaTime;
+        List<GameObject> bodyParts = m_BodyController.GetActiveParts();
+        int bodyCount = bodyParts.Count;
+
+        float scalingFactor = 0.5f;
+        float scaledMoveSpeed = m_MoveSpeed + (scalingFactor * bodyCount);
+
+        Debug.Log("Scaled Move Speed: " + scaledMoveSpeed.ToString());
+
+        Vector2 newPosition = gameObject.transform.up * scaledMoveSpeed * Time.deltaTime;
 
         gameObject.transform.position += (Vector3)newPosition;
     }

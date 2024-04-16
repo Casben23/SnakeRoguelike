@@ -154,8 +154,10 @@ MonoBehaviour:
   m_AIData: {fileID: 0}
   m_SteeringBehaviours:
   - {fileID: 1221415978638707026}
+  - {fileID: 1221415978638707037}
   m_Detectors:
   - {fileID: 1221415978638707027}
+  - {fileID: 1221415978638707036}
   m_DetectionDelay: 0.05
   m_ContextSolver: {fileID: 1221415978638707038}
   m_MaxHealth: 50

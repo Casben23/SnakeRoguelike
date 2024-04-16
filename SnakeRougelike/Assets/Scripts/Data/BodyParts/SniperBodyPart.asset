@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Part: 5
   Lvl1BodyPartPrefab: {fileID: 2561833913576612932, guid: e848a885b52a8ef4ab0db3a7dbd8744e, type: 3}
-  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: e848a885b52a8ef4ab0db3a7dbd8744e, type: 3}
-  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: e848a885b52a8ef4ab0db3a7dbd8744e, type: 3}
-  Cost: 1
+  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: 8c5182130a8e0e2448567e0e9bcfd612, type: 3}
+  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: e1ca767e512136344832ccc7a9f97639, type: 3}
+  Cost: 15
   Name: Sniper
-  Description: 'DAMAGE: [high]<br>Action rate: [slow]<br>range: [far]<br>PIERCE:
-    [0]<br>spread: [very low]<br>targeting: [furthest]'
+  Description: Fires @PA projectiles dealing @D damage. Targets furthest critter

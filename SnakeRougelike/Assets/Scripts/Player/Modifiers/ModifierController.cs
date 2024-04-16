@@ -18,6 +18,8 @@ public class Modifiers : ICloneable
 
     public float Mod_Spread = 1;
 
+    public float Mod_ChanceModifier = 1;
+
     public object Clone()
     {
         return this.MemberwiseClone();
@@ -85,6 +87,8 @@ public class ModifierController : MonoBehaviour
     {
         GameObject newModifierObject = Instantiate(InModifier.gameObject, new Vector3(100000, 100000, 1), Quaternion.identity);
         m_ItemModifiers.Add(newModifierObject.GetComponent<ModifierBase>());
+
+        ReapplyModifiers();
     }
 
     public Modifiers GetModifiers()

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Part: 10
   Lvl1BodyPartPrefab: {fileID: 2561833913576612932, guid: d8630897b28bbce46a4731d81769b99f, type: 3}
-  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: d8630897b28bbce46a4731d81769b99f, type: 3}
-  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: d8630897b28bbce46a4731d81769b99f, type: 3}
-  Cost: 1
+  Lvl2BodyPartPrefab: {fileID: 2561833913576612932, guid: a27e602f500026e4a985367c2ec3df89, type: 3}
+  Lvl3BodyPartPrefab: {fileID: 2561833913576612932, guid: c037d46dfac317745903c75e6cc9375f, type: 3}
+  Cost: 7
   Name: Shotgun
-  Description: 'DAMAGE: [high]<br>Action rate: [slow]<br>range: [very short]<br>PIERCE:
-    [0]<br>spread: [very high]<br>Targeting: [Closest] '
+  Description: Fires @PA projectiles dealing @D damage with high spread. Targets
+    closest critter

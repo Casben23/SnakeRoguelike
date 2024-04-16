@@ -53,7 +53,6 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private int m_MaxHealth = 5;
     [SerializeField] private float m_RotationSpeed = 3;
     [SerializeField] private float m_MoveSpeed = 5;
-    [SerializeField] private int m_MoneyDrop = 2;
 
     private SpriteRenderer m_SpriteRenderer;
     protected float m_DamagedTime = 0f;
@@ -141,11 +140,9 @@ public class EnemyBase : MonoBehaviour
         m_IsDead = true;
 
         GameStats gameStats = GameStatisticsManager.Instance.GetGameStats();
-        gameStats.CashGainedThisLevel += m_MoneyDrop;
         gameStats.EnemiesKilled += 1;
         gameStats.EnemiesKilledThisLevel += 1;
 
-        GameManager.Instance.AddMoney(m_MoneyDrop);
         SoundManager.Instance.PlayGeneralSound(SFXType.EnemyDie, true);
 
         Instantiate(m_DeathEffect, transform.position, Quaternion.identity);

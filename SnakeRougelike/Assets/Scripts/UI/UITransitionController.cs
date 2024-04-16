@@ -27,7 +27,7 @@ public class UITransitionController : MonoBehaviour
         m_BodyPartsLostText.gameObject.transform.localScale = new Vector3(0, 0, 1);
     }
 
-    public void StartSequence(System.Action InOnCompleteAction, bool InShowStats, bool m_StartOpen)
+    public void StartSequence(System.Action InOnCompleteAction, float InTransitionTime, bool InShowStats, bool m_StartOpen)
     {
         m_CurrentActionOnComplete = InOnCompleteAction;
 
@@ -42,11 +42,11 @@ public class UITransitionController : MonoBehaviour
         if (!InShowStats)
         {
             m_TransitionImage.transform.localScale = new Vector3(0, 0, 1);
-            LeanTween.scale(m_TransitionImage, new Vector3(50, 50, 1), 1f).setIgnoreTimeScale(true).setOnComplete(HideTransition);
+            LeanTween.scale(m_TransitionImage, new Vector3(50, 50, 1), InTransitionTime).setIgnoreTimeScale(true).setOnComplete(HideTransition);
             return;
         }
 
-        LeanTween.scale(m_TransitionImage, new Vector3(50, 50, 1), 1f).setIgnoreTimeScale(true).setOnComplete(ShowStats);
+        LeanTween.scale(m_TransitionImage, new Vector3(50, 50, 1), InTransitionTime).setIgnoreTimeScale(true).setOnComplete(ShowStats);
     }
 
     void ShowStats()
@@ -77,17 +77,17 @@ public class UITransitionController : MonoBehaviour
         LeanTween.scale(m_CashGainedText.gameObject, new Vector3(1, 1, 1), 0.5f).setEaseOutElastic().setIgnoreTimeScale(true);
         SoundManager.Instance.PlayGeneralSound(SFXType.ShowStatText, false);
 
-        yield return CoroutineUtil.WaitForRealSeconds(1f);
+        yield return CoroutineUtil.WaitForRealSeconds(0.2f);
 
         LeanTween.scale(m_EnemiesKilledText.gameObject, new Vector3(1, 1, 1), 0.5f).setEaseOutElastic().setIgnoreTimeScale(true);
         SoundManager.Instance.PlayGeneralSound(SFXType.ShowStatText, false);
 
-        yield return CoroutineUtil.WaitForRealSeconds(1f);
+        yield return CoroutineUtil.WaitForRealSeconds(0.2f);
 
         LeanTween.scale(m_BodyPartsLostText.gameObject, new Vector3(1, 1, 1), 0.5f).setEaseOutElastic().setIgnoreTimeScale(true);
         SoundManager.Instance.PlayGeneralSound(SFXType.ShowStatText, false);
 
-        yield return CoroutineUtil.WaitForRealSeconds(2f);
+        yield return CoroutineUtil.WaitForRealSeconds(1f);
 
         LeanTween.scale(m_LevelCompleteText, new Vector3(0, 0, 1), 0.2f).setEaseInCubic().setIgnoreTimeScale(true);
         LeanTween.scale(m_CashGainedText.gameObject, new Vector3(0, 0, 1), 0.2f).setEaseInCubic().setIgnoreTimeScale(true);

@@ -114,6 +114,8 @@ public class SnakeBodyController : MonoBehaviour
 
             // Smoothly move the current body part towards the desired position using Lerp
             m_ActiveBodyParts[i].transform.position = Vector2.Lerp(m_ActiveBodyParts[i].transform.position, targetPosition, Time.deltaTime * InCurrentMoveSpeed);
+
+
         }
     }
 

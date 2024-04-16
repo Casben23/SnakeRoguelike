@@ -86,4 +86,20 @@ public class ItemCollection : MonoBehaviour
         Debug.LogError("No Sprite found for [" + InBodyPart.ToString() + "]");
         return null;
     }
+
+    public SnakeBodyPartSO GetSnakePartSO(EBodyPart InBodyPart)
+    {
+        foreach(SnakeBodyPartSO bodyPartSO in m_SnakeBodyParts)
+        {
+            if (bodyPartSO.Part == InBodyPart)
+                return bodyPartSO;
+        }
+
+        return null;
+    }
+
+    public void RemoveItemFromCollection(ModifierBase InModifier)
+    {
+        m_ModifierItems.Remove(InModifier);
+    }
 }

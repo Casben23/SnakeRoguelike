@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UISnakeVisualiser : MonoBehaviour
+public class UISnakeVisualiser : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private GameObject m_PartVisualserPrefab;
 
@@ -12,7 +13,6 @@ public class UISnakeVisualiser : MonoBehaviour
     private int m_CurrentAmount = 0;
 
     private List<GameObject> m_PartVisualisers = new List<GameObject>();
-
     public EBodyPart GetCurrentPart()
     {
         return m_CurrentPart;
@@ -97,7 +97,6 @@ public class UISnakeVisualiser : MonoBehaviour
             imageComp.sprite = partSprite;
         }
 
-
         TextMeshProUGUI textComp = InPartVisualiser.GetComponentInChildren<TextMeshProUGUI>();
         if (textComp == null)
             return;
@@ -105,7 +104,38 @@ public class UISnakeVisualiser : MonoBehaviour
         textComp.text = InLevel.ToString();
     }
 
-    private void Start()
+    public void OnPointerExit(PointerEventData eventData)
     {
+        UIPartInfo toolTip = UINextLevelScreen.Instance.GetToolTip();
+        toolTip.Hide();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SnakeBodyPartSO partSO = ItemCollection.Instance.GetSnakePartSO(m_CurrentPart);
+
+        int level3Count = (m_CurrentAmount / 9) % 3;
+        int level2Count = (m_CurrentAmount / 3) % 3;
+        int level1Count = m_CurrentAmount % 3;
+
+        UIPartInfo toolTip = UINextLevelScreen.Instance.GetToolTip();
+
+        if (level3Count == 1)
+        {
+            toolTip.ShowPartInfo(partSO, 3);
+            return;
+        }
+
+        if (level2Count >= 1)
+        {
+            toolTip.ShowPartInfo(partSO, 2);
+            return;
+        }
+
+        if (level1Count >= 1)
+        {
+            toolTip.ShowPartInfo(partSO, 1);
+            return;
+        }
     }
 }

@@ -13,7 +13,7 @@ public class SniperModifer : ModifierBase
 
     public override string GetModifierDescription()
     {
-        string description = "<color=#78E08F>+" + m_ModifierAmount * 100 + "</color=> pierce to all weapons";
+        string description = "<color=#78E08F>+" + m_ModifierAmount + "</color=> pierce to all weapons";
         return description;
     }
 }

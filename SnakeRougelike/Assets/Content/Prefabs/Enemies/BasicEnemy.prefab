@@ -154,14 +154,15 @@ MonoBehaviour:
   m_AIData: {fileID: 0}
   m_SteeringBehaviours:
   - {fileID: 1221415978638707026}
+  - {fileID: 1221415978638707037}
   m_Detectors:
   - {fileID: 1221415978638707027}
+  - {fileID: 1221415978638707036}
   m_DetectionDelay: 0.05
   m_ContextSolver: {fileID: 1221415978638707038}
-  m_MaxHealth: 100
+  m_MaxHealth: 60
   m_RotationSpeed: 2
   m_MoveSpeed: 6
-  m_MoneyDrop: 2
   m_FlashDuration: 0.2
   m_FlashColor: {r: 1, g: 1, b: 1, a: 1}
   m_DeathEffect: {fileID: 2827643808565545020, guid: 90d7f0c9455eceb4ab0ed4fe809023fa, type: 3}
@@ -236,11 +237,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117e33d4d1f20fd45aae51443b8487dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DetectionRadius: 3.03
+  m_DetectionRadius: 6
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 128
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
 --- !u!114 &1221415978638707037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9f79c87c7c68643b7eb7331850d1b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Radius: 3
+  m_Radius: 6
   m_AgentColliderSize: 2
   m_ShowGizmos: 0
 --- !u!50 &1221415978638707035

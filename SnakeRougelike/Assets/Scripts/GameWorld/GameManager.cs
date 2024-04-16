@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject m_MoneyText;
     [SerializeField] private GameObject m_DamageText;
 
+    [SerializeField] private int m_ModifierEveryLevel = 3;
+
     private GameObject m_Player;
     private int m_CurrentMoney = 0;
     private int m_CurrentLevel = 0;
@@ -48,7 +50,7 @@ public class GameManager : MonoBehaviour
         m_MoneyText.GetComponent<TextMeshProUGUI>().text = m_CurrentMoney.ToString() + "$";
 
         m_PowerUpScreen.gameObject.SetActive(false);
-        m_TransitionController.StartSequence(CloseUpgradeScreen, false, true);
+        m_TransitionController.StartSequence(CloseUpgradeScreen, 1f, false, true);
     }
 
     public GameObject GetPlayer()
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
     public void AddMoney(int InAmount)
     {
         m_CurrentMoney += InAmount;
+        GameStatisticsManager.Instance.GetGameStats().CashGainedThisLevel += InAmount;
         m_MoneyText.GetComponent<TextMeshProUGUI>().text = m_CurrentMoney.ToString() + "$";
     }
 
@@ -103,29 +106,27 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 0;
 
-        m_PowerUpScreen.gameObject.SetActive(true);
-        m_PowerUpScreen.ShowPowerUpScreenSequence();
-
-        //if(m_CurrentLevel % 3 == 0)
-        //{
-        //    m_PowerUpScreen.ShowPowerUpScreenSequence();
-        //}
-        //else
-        //{
-        //    m_TransitionController.StartSequence(ShowUpgradeScreen, true, false);
-        //}
+        if (m_CurrentLevel % m_ModifierEveryLevel == 0)
+        {
+            m_PowerUpScreen.gameObject.SetActive(true);
+            m_PowerUpScreen.ShowPowerUpScreenSequence();
+        }
+        else
+        {
+            m_TransitionController.StartSequence(ShowUpgradeScreen, 0.7f, true, false);
+        }
         m_IsWaitingForNewLevel = true;
     }
 
     public void OnPowerUpChosen()
     {
         m_PowerUpScreen.HideButtons();
-        m_TransitionController.StartSequence(ShowUpgradeScreen, true, false);
+        m_TransitionController.StartSequence(ShowUpgradeScreen, 0.7f, true, false);
     }
 
     public void StartTransition(System.Action InOnCompleteAction, bool InShowStats, bool m_StartOpen)
     {
-        m_TransitionController.StartSequence(InOnCompleteAction, InShowStats, m_StartOpen);
+        m_TransitionController.StartSequence(InOnCompleteAction, 0.7f, InShowStats, m_StartOpen);
     }
 
     public void GameOver()
@@ -153,7 +154,7 @@ public class GameManager : MonoBehaviour
 
     public void StartNextLevel()
     {
-        m_TransitionController.StartSequence(CloseUpgradeScreen, false, false);
+        m_TransitionController.StartSequence(CloseUpgradeScreen, 1f, false, false);
     }
 
     private void CloseUpgradeScreen()

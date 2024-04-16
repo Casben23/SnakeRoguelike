@@ -24,6 +24,11 @@ public class UIPowerUpScreen : MonoBehaviour
     {
         List<ModifierBase> randomModifiers = ItemCollection.Instance.GetRandomItemModifiers(2);
 
+        Vector3 scale = new Vector3(0, 0, 0);
+        m_PowerUpButton1.transform.localScale = scale;
+        m_PowerUpButton2.transform.localScale = scale;
+        m_ChosePowerUpText.transform.localScale = scale;
+
         m_PowerUpButton1.GetComponent<Button>().interactable = true;
         m_PowerUpButton2.GetComponent<Button>().interactable = true;
 
