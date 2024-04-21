@@ -160,7 +160,7 @@ MonoBehaviour:
   - {fileID: 1221415978638707036}
   m_DetectionDelay: 0.05
   m_ContextSolver: {fileID: 1221415978638707038}
-  m_MaxHealth: 60
+  m_MaxHealth: 20
   m_RotationSpeed: 2
   m_MoveSpeed: 6
   m_FlashDuration: 0.2

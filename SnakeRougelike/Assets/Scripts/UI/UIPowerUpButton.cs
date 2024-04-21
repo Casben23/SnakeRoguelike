@@ -23,5 +23,17 @@ public class UIPowerUpButton : MonoBehaviour
         ModifierController.Instance.GiveItemModifier(m_CurrentModifier);
         GameManager.Instance.OnPowerUpChosen();
         ItemCollection.Instance.RemoveItemFromCollection(m_CurrentModifier);
+
+        GameObject player = GameManager.Instance.GetPlayer();
+        if (player == null)
+            return;
+
+        SnakeBodyController bodyController = player.GetComponent<SnakeBodyController>();
+        if (bodyController == null)
+            return;
+
+        bodyController.UpdatePartStats();
+
+        UINextLevelScreen.Instance.AddNewPowerupVisualiser(m_CurrentModifier);
     }
 }

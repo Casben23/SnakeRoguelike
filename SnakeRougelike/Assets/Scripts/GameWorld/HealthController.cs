@@ -13,6 +13,17 @@ public class HealthController : MonoBehaviour
         m_CurrentHealth = m_MaxHealth;
     }
 
+    public void Heal(int InHealthAmount)
+    {
+        m_CurrentHealth += InHealthAmount;
+        m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, 0, m_MaxHealth);
+    }
+
+    public void FullyHeal()
+    {
+        m_CurrentHealth = m_MaxHealth;
+    }
+
     public void TakeDamage(int InDamage)
     {
         m_CurrentHealth -= InDamage;

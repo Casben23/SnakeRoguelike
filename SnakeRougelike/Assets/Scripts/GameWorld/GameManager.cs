@@ -61,6 +61,16 @@ public class GameManager : MonoBehaviour
         return m_Player;
     }
 
+    public void AddMoney()
+    {
+        int interest = GameManager.instance.GetCurrentMoney() / 4;
+        int cashToGain = 2 + interest;
+
+        m_CurrentMoney += cashToGain;
+        GameStatisticsManager.Instance.GetGameStats().CashGainedThisLevel += cashToGain;
+        m_MoneyText.GetComponent<TextMeshProUGUI>().text = m_CurrentMoney.ToString() + "$";
+    }
+
     public void AddMoney(int InAmount)
     {
         m_CurrentMoney += InAmount;
@@ -106,6 +116,13 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 0;
 
+        SnakeBodyController bodyController = m_Player.GetComponent<SnakeBodyController>();
+        if (bodyController == null)
+            return;
+
+        bodyController.ResurectDeadBodyParts();
+
+        
         if (m_CurrentLevel % m_ModifierEveryLevel == 0)
         {
             m_PowerUpScreen.gameObject.SetActive(true);
@@ -115,6 +132,7 @@ public class GameManager : MonoBehaviour
         {
             m_TransitionController.StartSequence(ShowUpgradeScreen, 0.7f, true, false);
         }
+        AddMoney();
         m_IsWaitingForNewLevel = true;
     }
 

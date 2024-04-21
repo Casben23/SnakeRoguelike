@@ -38,12 +38,19 @@ public enum EBodyPart
     COUNT = 11
 }
 
+public class WeaponContainer
+{
+    EBodyPart BodyPartType = EBodyPart.COUNT;
+    int Amount = 0;
+}
+
 public class SnakeBodyController : MonoBehaviour
 {
     [SerializeField] private GameObject m_SnakeBodyPart;
     [SerializeField] private GameObject m_DestroyEffect;
 
     private List<GameObject> m_ActiveBodyParts = new List<GameObject>();
+    private List<Tuple<GameObject, int>> m_DeadBodyParts = new List<Tuple<GameObject, int>>();
     private Dictionary<EBodyPart, int> m_BodyPartCollection = new Dictionary<EBodyPart, int>();
 
     private bool m_IsDead = false;
@@ -114,8 +121,6 @@ public class SnakeBodyController : MonoBehaviour
 
             // Smoothly move the current body part towards the desired position using Lerp
             m_ActiveBodyParts[i].transform.position = Vector2.Lerp(m_ActiveBodyParts[i].transform.position, targetPosition, Time.deltaTime * InCurrentMoveSpeed);
-
-
         }
     }
 
@@ -174,24 +179,18 @@ public class SnakeBodyController : MonoBehaviour
     {
         if (m_ActiveBodyParts.Count > 1)
         {
-            foreach (GameObject part in m_ActiveBodyParts)
+            for (int i = 0; i < m_ActiveBodyParts.Count; i++)
             {
+                GameObject part = m_ActiveBodyParts[i];
                 if (part == InPartToRemove)
                 {
                     SoundManager.Instance.PlayGeneralSound(SFXType.BodyPartDestroyed, false);
                     Instantiate(m_DestroyEffect, part.transform.position, Quaternion.identity);
 
                     m_ActiveBodyParts.Remove(part);
+                    m_DeadBodyParts.Add(new Tuple<GameObject, int>(part, i));
 
-                    SnakeBodyPartBase bodyPartBase = part.GetComponent<SnakeBodyPartBase>();
-                    if (bodyPartBase == null)
-                        return;
-
-                    m_BodyPartCollection[bodyPartBase.GetPart()] = 0;
-
-                    Destroy(part);
-
-                    GameStatisticsManager.Instance.GetGameStats().PartsLostThisLevel += 1;
+                    part.SetActive(false);
 
                     if (m_ActiveBodyParts.Count <= 1)
                     {
@@ -203,7 +202,7 @@ public class SnakeBodyController : MonoBehaviour
                 }
             }
 
-            // Fix modifiers since new modifiers could have been added
+            // Fix modifiers since new modifiers could have been removed
             UpdatePartStats();
         }
     }
@@ -216,6 +215,31 @@ public class SnakeBodyController : MonoBehaviour
     public bool IsDead()
     {
         return m_IsDead;
+    }
+
+    public void ResurectDeadBodyParts()
+    {
+        m_DeadBodyParts.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+
+        foreach (Tuple<GameObject, int> deadPart in m_DeadBodyParts)
+        {
+            m_ActiveBodyParts.Insert(deadPart.Item2, deadPart.Item1);
+
+            deadPart.Item1.SetActive(true);
+
+            HealthController healthController = deadPart.Item1.GetComponent<HealthController>();
+        }
+
+        foreach(GameObject part in m_ActiveBodyParts)
+        {
+            HealthController healthController = part.GetComponent<HealthController>();
+            if (healthController == null)
+                continue;
+
+            healthController.FullyHeal();
+        }
+
+        m_DeadBodyParts.Clear();
     }
 
     void RemoveRandomPart()
@@ -258,7 +282,7 @@ public class SnakeBodyController : MonoBehaviour
         }
     }
 
-    private void UpdatePartStats()
+    public void UpdatePartStats()
     {
         ModifierController.Instance.ReapplyModifiers();
 

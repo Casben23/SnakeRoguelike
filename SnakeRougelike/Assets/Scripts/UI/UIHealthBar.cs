@@ -25,7 +25,7 @@ public class UIHealthBar : MonoBehaviour
 
         if (m_CurrentHealthController.IsDead())
         {
-            Destroy(gameObject);
+            m_FillImage.enabled = false;
             return;
         }
 

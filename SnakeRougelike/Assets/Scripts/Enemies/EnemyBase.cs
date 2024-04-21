@@ -86,7 +86,7 @@ public class EnemyBase : MonoBehaviour
         m_StartColor = m_SpriteRenderer.color;
 
         m_HealthController = gameObject.GetComponent<HealthController>();
-        m_HealthController.SetupHealthController(m_MaxHealth * GameManager.Instance.GetCurrentLevel() / 2);
+        m_HealthController.SetupHealthController(m_MaxHealth + (10 * GameManager.Instance.GetCurrentLevel()));
 
         UIHealthBarController.Instance.CreateNewHealthBar(m_HealthController);
 
@@ -220,7 +220,6 @@ public class EnemyBase : MonoBehaviour
             yield return null;
 
         m_SpriteRenderer.color = new Color(m_FlashColor.r, m_FlashColor.g, m_FlashColor.b);
-
 
         float elapsedTime = 0f;
         while (elapsedTime < m_FlashDuration)

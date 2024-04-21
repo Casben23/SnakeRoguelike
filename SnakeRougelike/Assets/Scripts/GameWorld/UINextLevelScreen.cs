@@ -25,7 +25,10 @@ public class UINextLevelScreen : MonoBehaviour
     }
 
     [SerializeField] private GameObject m_Background;
+    
     [SerializeField] private UISnakeVisualiserController m_SnakeVisualiser;
+    [SerializeField] private UIPowerupVisualierController m_PowerupVisualiser;
+
     [SerializeField] List<UIPurchasePart> m_PurchasePartButtons;
     [SerializeField] private UIPartInfo m_ToolTip;
 
@@ -81,12 +84,17 @@ public class UINextLevelScreen : MonoBehaviour
         m_PuchasePanelOptionsLocked = InIsLocked;
     }
 
+    public void AddNewPowerupVisualiser(ModifierBase InModifier)
+    {
+        m_PowerupVisualiser.AddNewVisualiser(InModifier);
+    }
+
     private void Update()
     {
         //DEBUG KEY
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            GameManager.Instance.AddMoney(10);
+            GameManager.Instance.AddMoney();
         }
     }
 }

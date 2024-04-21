@@ -25,12 +25,12 @@ public class UISnakeVisualiserController : MonoBehaviour
         {
             if (item.Value == 0)
             {
-                foreach (UISnakeVisualiser visualiser in m_VisualisersList)
+                for (int i = m_VisualisersList.Count - 1; i >= 0; i--)
                 {
-                    if (visualiser.GetCurrentPart() == item.Key)
+                    if (m_VisualisersList[i].GetCurrentPart() == item.Key)
                     {
-                        m_VisualisersList.Remove(visualiser);
-                        Destroy(visualiser.gameObject);
+                        m_VisualisersList.Remove(m_VisualisersList[i]);
+                        Destroy(m_VisualisersList[i].gameObject);
                     }
                 }
                 continue;

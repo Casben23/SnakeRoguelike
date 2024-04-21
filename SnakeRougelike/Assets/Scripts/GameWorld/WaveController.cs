@@ -131,19 +131,15 @@ public class WaveController : MonoBehaviour
         {
             GameManager gameManager = GameManager.Instance;
 
-            int cashToGain = Mathf.RoundToInt(10 * (gameManager.GetCurrentLevel() * 0.3f));
             if (m_CurrentWave >= m_WaveAmount)
             {
                 if (!GameManager.Instance.IsWaitingForNewLevel())
                 {
-                    gameManager.AddMoney(cashToGain);
                     GameManager.Instance.OnLevelComplete();
                 }
                 return;
             }
-
            
-            gameManager.AddMoney(cashToGain);
             StartNewWave();
         }
     }
